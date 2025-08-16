@@ -1,0 +1,180 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
+}
+
+#nav {
+  display: flex;
+  gap: 0;
+  height: 2rem;
+  width: 100%;
+  background-color: #80c0ff;
+}
+#nav > input {
+  height: 100%;
+  border-width: 0;
+  padding: 0rem 0.5rem;
+  background-color: #c0c0c0;
+}
+#nav > input:hover {
+  background-color: #a0a0a0;
+}
+
+#main {
+  width: 100%;
+  height: calc(100% - 2rem);
+  background-color: #404040;
+  color: #ffffff;
+}
+#main a {
+  color: #80c0ff;
+}
+
+.branch {
+  position: absolute;
+  border-radius: 1rem;
+  overflow: hidden;
+  width: 25%;
+  max-width: 20rem;
+  transform: translate(-50%, -50%);
+}
+.statusnormal {
+  box-shadow: #c0c0c0 0 0 1rem 0;
+}
+.statusedit {
+  box-shadow: #e0c040 0 0 1rem 0;
+}
+.statusdelete {
+  box-shadow: #e06060 0 0 1rem 0;
+}
+.branch > .content {
+  background-color: #404040;
+}
+.branch > .textedit {
+  padding: 0.5rem 1rem;
+  font-family: "Courier New", Courier, monospace;
+}
+.textedit:focus {
+  outline: none;
+}
+.branch > .text {
+  padding: 0.5rem 1rem;
+}
+.branch > .prompt {
+  padding: 0.5rem 1rem;
+  text-align: center;
+}
+
+@keyframes hidetools {
+  from {
+    height: 2rem;
+    display: flex;
+  }
+  to {
+    height: 0;
+    display: none;
+  }
+}
+.branch > .tools {
+  display: none;
+  width: 100%;
+  height: 0;
+  animation-name: hidetools;
+  animation-duration: 0.5s;
+}
+@keyframes showtools {
+  from {
+    height: 0;
+    display: none;
+  }
+  to {
+    height: 2rem;
+    display: flex;
+  }
+}
+.branch:hover > .tools {
+  height: 2rem;
+  display: flex;
+  gap: 0;
+  animation-name: showtools;
+  animation-duration: 0.5s;
+}
+.tools > input {
+  height: 100%;
+  border-width: 0;
+}
+
+.branch > .prompts {
+  width: 100%;
+  height: 2rem;
+  display: flex;
+  gap: 0;
+}
+.prompts > input {
+  height: 100%;
+  border-width: 0;
+}
+
+.edit {
+  width: 33%;
+  background-color: #e0c040;
+}
+.edit:hover {
+  background-color: #c0a020;
+}
+
+.delete {
+  width: 34%;
+  background-color: #e06060;
+}
+.delete:hover {
+  background-color: #c04040;
+}
+
+.add {
+  width: 33%;
+  background-color: #60c060;
+}
+.add:hover {
+  background-color: #40a040;
+}
+
+.no {
+  width: 50%;
+  background-color: #ff6060;
+}
+.no:hover {
+  background-color: #c02020;
+}
+
+.yes {
+  width: 50%;
+  background-color: #60c060;
+}
+.yes:hover {
+  background-color: #208020;
+}
+
+.q1 {
+  left: 75%;
+  top: 25%;
+}
+.q2 {
+  left: 25%;
+  top: 25%;
+}
+.q3 {
+  left: 25%;
+  top: 75%;
+}
+.q4 {
+  left: 75%;
+  top: 75%;
+}

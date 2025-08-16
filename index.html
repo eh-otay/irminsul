@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <!-- <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'"
+    />
+    <meta
+      http-equiv="X-Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'"
+    /> -->
+    <title>Irminsul | New file</title>
+    <link rel="stylesheet" href="./style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"
+      integrity="sha384-GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/atom-one-dark.min.css"
+    />
+  </head>
+
+  <body>
+    <div id="nav">
+      <input type="button" id="open-file" value="Open" />
+      <input type="button" id="new-file" value="New" />
+      <input type="button" id="save-file" value="Save" />
+      <input type="button" id="save-as-file" value="Save as" />
+      <input type="button" id="reload-file" value="Reload" />
+    </div>
+
+    <div id="main"></div>
+    <script src="./renderer.js"></script>
+  </body>
+</html>
