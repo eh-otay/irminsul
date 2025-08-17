@@ -1,4 +1,5 @@
 const main = document.querySelector('#main');
+const treePathElem = document.querySelector('#tree-path');
 
 let filePath = '';
 
@@ -11,6 +12,8 @@ document.addEventListener('readystatechange', () => {
     newFile();
     addEventListener('keydown', (event) => {
       if (event.key === 'Enter' && !event.shiftKey)
+        event.preventDefault();
+      if (event.altKey)
         event.preventDefault();
     });
     addEventListener('keyup', (event) => {
@@ -27,8 +30,8 @@ async function drawBranch(x, y, branch, branchPath) {
   const content = document.createElement('div');
   content.setAttribute('class', 'text content');
   content.innerHTML = await ElectronAPI.parseMD(branch.value);
-  content.querySelectorAll('a').forEach((elem)=>{
-    elem.addEventListener('click', async (event)=>{
+  content.querySelectorAll('a').forEach((elem) => {
+    elem.addEventListener('click', async (event) => {
       event.preventDefault();
       await ElectronAPI.openLink(elem.href);
     });
@@ -44,7 +47,7 @@ async function drawBranch(x, y, branch, branchPath) {
   editBtn.value = 'Edit';
   btns.appendChild(editBtn);
 
-  async function editEvt () {
+  async function editEvt() {
     branchElem.setAttribute('class', 'branch statusedit');
     content.setAttribute('class', 'content textedit');
     content.setAttribute('contenteditable', 'plaintext-only');
@@ -65,7 +68,7 @@ async function drawBranch(x, y, branch, branchPath) {
     noBtn.value = 'Cancel';
     btns.appendChild(noBtn);
 
-    async function no () {
+    async function no() {
       branchElem.remove();
       drawBranch(x, y, branch, branchPath);
     }
@@ -77,7 +80,7 @@ async function drawBranch(x, y, branch, branchPath) {
     yesBtn.value = 'Save';
     btns.appendChild(yesBtn);
 
-    async function yes () {
+    async function yes() {
       branch.value = content.innerText;
 
       branchElem.remove();
@@ -85,7 +88,7 @@ async function drawBranch(x, y, branch, branchPath) {
     }
     yesBtn.addEventListener('click', yes);
 
-    async function keysEdit (event) {
+    async function keysEdit(event) {
       if (!branchElem.matches(':hover'))
         return;
 
@@ -109,7 +112,7 @@ async function drawBranch(x, y, branch, branchPath) {
   deleteBtn.value = 'Delete';
   btns.appendChild(deleteBtn);
 
-  async function deleteEvt () {
+  async function deleteEvt() {
     branchElem.setAttribute('class', 'branch statusdelete');
     content.setAttribute('class', 'content prompt');
     content.innerHTML = 'Are you sure?';
@@ -123,7 +126,7 @@ async function drawBranch(x, y, branch, branchPath) {
     noBtn.value = 'No';
     btns.appendChild(noBtn);
 
-    async function no () {
+    async function no() {
       branchElem.remove();
       drawBranch(x, y, branch, branchPath);
     }
@@ -135,7 +138,7 @@ async function drawBranch(x, y, branch, branchPath) {
     yesBtn.value = 'Yes';
     btns.appendChild(yesBtn);
 
-    async function yes () {
+    async function yes() {
       let parentBranch = tree;
       let i = 0;
       for (; i < branchPath.length - 1; i++) {
@@ -152,7 +155,7 @@ async function drawBranch(x, y, branch, branchPath) {
     }
     yesBtn.addEventListener('click', yes);
 
-    async function keysDelete (event) {
+    async function keysDelete(event) {
       if (!branchElem.matches(':hover'))
         return;
 
@@ -176,14 +179,12 @@ async function drawBranch(x, y, branch, branchPath) {
   addBtn.value = 'Add';
   btns.appendChild(addBtn);
 
-  async function addEvt () {
-    treePath = branchPath;
+  async function addEvt() {
     branch.children.push({
-      'type': 'text',
       'value': 'Notes...',
       'children': []
     });
-    drawTree(treePath, tree);
+    updateTreePath(branchPath);
   }
   addBtn.addEventListener('click', addEvt);
 
@@ -227,47 +228,113 @@ async function drawTree(treePath, tree) {
   const r1 = WIDTH / 3;
   const r2 = HEIGHT / 3;
 
+  function a (i) {
+    return () => {
+      treePath.push(i);
+      updateTreePath(treePath);
+    };
+  }
   for (const i in currentBranch.children) {
     const x = Math.cos(2 * Math.PI * i / n) * r1;
     const y = Math.sin(2 * Math.PI * i / n) * r2;
     const path = Object.create(treePath);
     path.push(i);
     const branch = await drawBranch(WIDTH / 2 + x, HEIGHT / 2 + y, currentBranch.children[i], path);
-    branch.querySelector('.content').addEventListener('click', () => {
-      treePath.push(i);
-      drawTree(treePath, tree);
-    });
+    branch.querySelector('.content').addEventListener('click', a(i));
   }
 }
 
+function updateTreePath(newTreePath) {
+  treePath = newTreePath;
+
+  function a(i) {
+    return () => {
+      updateTreePath(treePath.slice(0, i));
+    };
+  }
+
+  treePathElem.innerHTML = '';
+  let currentBranch = tree;
+  let i = 0;
+  for (const path of treePath) {
+    const pathElem = document.createElement('p');
+    pathElem.setAttribute('class', 'parent');
+    pathElem.innerHTML = currentBranch.value.substring(0, 10);
+    treePathElem.append(pathElem);
+
+    pathElem.addEventListener('click', a(i));
+
+    i++;
+    currentBranch = currentBranch.children[path];
+  }
+  const pathElem = document.createElement('p');
+  pathElem.innerHTML = currentBranch.value.substring(0, 10);
+  treePathElem.append(pathElem);
+
+  drawTree(treePath, tree);
+}
+
+document.addEventListener('drop', async (event) => {
+  event.preventDefault();
+  event.stopPropagation();
+
+  let currentBranch = tree;
+  for (const path of treePath) {
+    currentBranch = currentBranch.children[path];
+  }
+
+  for (const file of event.dataTransfer.files) {
+    const p = file.name.toLowerCase();
+    if (!(p.endsWith('.jpeg') || p.endsWith('.jpg') || p.endsWith('.png'))) {
+      alert('unable to upload this format');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.addEventListener('load', async (event) => {
+      currentBranch.children.push({
+        'value': `![${file.name}](${event.target.result})`,
+        'children': []
+      });
+      await drawTree(treePath, tree);
+    });
+    reader.readAsDataURL(file);
+  }
+});
+
+document.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+});
+
 async function openFile() {
   const { status, err, path, content } = await ElectronAPI.open();
-  if (status !== 'success') {
+  if (status === 'error') {
+    alert(`Failed to open: ${err}`);
     return;
   }
   filePath = path;
   tree = JSON.parse(content);
-  treePath = [];
-  drawTree(treePath, tree);
+  updateTreePath([]);
   ElectronAPI.setTitle('Irminsul | ' + path);
 }
 document.querySelector('#open-file').addEventListener('click', openFile);
 
 async function newFile() {
   filePath = '';
-  treePath = [];
   tree = {
-    'value': '# TITLE',
+    'value': '# IRMINSUL',
     'children': []
   };
-  drawTree(treePath, tree);
+  updateTreePath([]);
   ElectronAPI.setTitle('Irminsul | New file');
 }
 document.querySelector('#new-file').addEventListener('click', newFile);
 
 async function saveAsFile() {
   const { status, err, path, content } = await ElectronAPI.saveAs(JSON.stringify(tree));
-  if (status !== 'success') {
+  if (status === 'error') {
+    alert(`Failed to save: ${err}`);
     return;
   }
   filePath = path;
@@ -280,7 +347,8 @@ async function saveFile() {
     return;
   }
   const { status, err, path, content } = await ElectronAPI.save(filePath, JSON.stringify(tree).toString());
-  if (status !== 'success') {
+  if (status === 'error') {
+    alert(`Failed to save: ${err}`);
   }
 }
 document.querySelector('#save-file').addEventListener('click', saveFile);

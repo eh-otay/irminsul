@@ -8,6 +8,7 @@ body {
   height: 100%;
   font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
     "Lucida Sans", Arial, sans-serif;
+  font-size: 12pt;
 }
 
 #nav {
@@ -17,17 +18,20 @@ body {
   width: 100%;
   background-color: #80c0ff;
 }
-#nav > input {
+#nav > input[type="button"] {
   height: 100%;
   border-width: 0;
   padding: 0rem 0.5rem;
   background-color: #c0c0c0;
+  cursor: pointer;
 }
 #nav > input:hover {
   background-color: #a0a0a0;
 }
 
 #main {
+  position: absolute;
+  top: 2rem;
   width: 100%;
   height: calc(100% - 2rem);
   background-color: #404040;
@@ -36,6 +40,9 @@ body {
 #main a {
   color: #80c0ff;
 }
+#main img {
+  max-width: 100%;
+}
 
 .branch {
   position: absolute;
@@ -43,6 +50,7 @@ body {
   overflow: hidden;
   width: 25%;
   max-width: 20rem;
+  max-height: 40rem;
   transform: translate(-50%, -50%);
 }
 .statusnormal {
@@ -106,9 +114,10 @@ body {
   animation-name: showtools;
   animation-duration: 0.5s;
 }
-.tools > input {
+.tools > input[type="button"] {
   height: 100%;
   border-width: 0;
+  cursor: pointer;
 }
 
 .branch > .prompts {
@@ -177,4 +186,23 @@ body {
 .q4 {
   left: 75%;
   top: 75%;
+}
+
+#tree-path {
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  width: 20%;
+  max-width: 20rem;
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+
+  font-family: 'Courier New', Courier, monospace;
+}
+#tree-path > .parent {
+  color: #80c0ff;
+  cursor: pointer;
+}
+#tree-path > .parent:hover {
+  color: #6080c0;
 }
