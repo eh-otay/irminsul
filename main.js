@@ -75,7 +75,7 @@ const createWindow = () => {
     }
   });
 
-  window.webContents.openDevTools();
+  // window.webContents.openDevTools();
 
   window.loadFile('index.html');
 };
