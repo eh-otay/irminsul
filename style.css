@@ -16,7 +16,7 @@ body {
   gap: 0;
   height: 2rem;
   width: 100%;
-  background-color: #80c0ff;
+  background-color: #808080;
 }
 #nav > input[type="button"] {
   height: 100%;
@@ -35,6 +35,7 @@ body {
   width: 100%;
   height: calc(100% - 2rem);
   background-color: #404040;
+  overflow:hidden;
   color: #ffffff;
 }
 #main a {
@@ -47,10 +48,11 @@ body {
 .branch {
   position: absolute;
   border-radius: 1rem;
-  overflow: hidden;
-  width: 25%;
-  max-width: 20rem;
-  max-height: 40rem;
+  min-width: 10rem;
+  max-width: 40rem;
+  max-width: 30vw;
+  max-height: 25rem;
+  max-height: 40vh;
   transform: translate(-50%, -50%);
 }
 .statusnormal {
@@ -63,7 +65,11 @@ body {
   box-shadow: #e06060 0 0 1rem 0;
 }
 .branch > .content {
+  border-radius: 1rem;
   background-color: #404040;
+  max-height: 18rem;
+  max-height: calc(40vh - 2rem);
+  overflow: scroll;
 }
 .branch > .textedit {
   padding: 0.5rem 1rem;
@@ -134,6 +140,7 @@ body {
 .edit {
   width: 33%;
   background-color: #e0c040;
+  border-bottom-left-radius: 1rem;
 }
 .edit:hover {
   background-color: #c0a020;
@@ -150,6 +157,7 @@ body {
 .add {
   width: 33%;
   background-color: #60c060;
+  border-bottom-right-radius: 1rem;
 }
 .add:hover {
   background-color: #40a040;

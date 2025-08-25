@@ -150,6 +150,7 @@ async function drawBranch(x, y, branch, branchPath) {
         drawTree(treePath, tree);
       } else {
         treePath.pop();
+        updateTreePath(treePath);
         drawTree(treePath, tree);
       }
     }
