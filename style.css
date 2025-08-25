@@ -166,17 +166,19 @@ body {
 .no {
   width: 50%;
   background-color: #ff6060;
+  border-bottom-left-radius: 1rem;
 }
 .no:hover {
-  background-color: #c02020;
+  background-color: #c04040;
 }
 
 .yes {
   width: 50%;
   background-color: #60c060;
+  border-bottom-right-radius: 1rem;
 }
 .yes:hover {
-  background-color: #208020;
+  background-color: #40a040;
 }
 
 .q1 {

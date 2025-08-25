@@ -7,6 +7,8 @@ let tree;
 
 let treePath = [];
 
+let editing = false;
+
 document.addEventListener('readystatechange', () => {
   if (document.readyState === 'complete') {
     newFile();
@@ -48,6 +50,8 @@ async function drawBranch(x, y, branch, branchPath) {
   btns.appendChild(editBtn);
 
   async function editEvt() {
+    editing = true;
+
     branchElem.setAttribute('class', 'branch statusedit');
     content.setAttribute('class', 'content textedit');
     content.setAttribute('contenteditable', 'plaintext-only');
@@ -69,6 +73,8 @@ async function drawBranch(x, y, branch, branchPath) {
     btns.appendChild(noBtn);
 
     async function no() {
+      editing = false;
+
       branchElem.remove();
       drawBranch(x, y, branch, branchPath);
     }
@@ -81,6 +87,8 @@ async function drawBranch(x, y, branch, branchPath) {
     btns.appendChild(yesBtn);
 
     async function yes() {
+      editing = false;
+
       branch.value = content.innerText;
 
       branchElem.remove();
@@ -274,6 +282,17 @@ function updateTreePath(newTreePath) {
 
   drawTree(treePath, tree);
 }
+
+document.addEventListener('keydown', async (event) => {
+  if(!editing) {
+    if (event.key === '[') {
+      if (treePath.length > 0) {
+        treePath.pop();
+        updateTreePath(treePath);
+      }
+    }
+  }
+})
 
 document.addEventListener('drop', async (event) => {
   event.preventDefault();
