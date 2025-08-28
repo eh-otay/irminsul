@@ -9,6 +9,7 @@ body {
   font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
     "Lucida Sans", Arial, sans-serif;
   font-size: 12pt;
+  overflow: hidden;
 }
 
 #nav {
@@ -32,7 +33,7 @@ body {
 #main {
   position: absolute;
   top: 2rem;
-  width: 100%;
+  width: 200%;
   height: calc(100% - 2rem);
   background-color: #404040;
   overflow:hidden;
@@ -50,9 +51,9 @@ body {
   border-radius: 1rem;
   min-width: 10rem;
   max-width: 40rem;
-  max-width: 30vw;
+  max-width: 25vw;
   max-height: 25rem;
-  max-height: 40vh;
+  max-height: 28vh;
   transform: translate(-50%, -50%);
 }
 .statusnormal {
@@ -67,8 +68,8 @@ body {
 .branch > .content {
   border-radius: 1rem;
   background-color: #404040;
-  max-height: 18rem;
-  max-height: calc(40vh - 2rem);
+  max-height: calc(25rem - 2rem);
+  max-height: calc(28vh - 2rem);
   overflow: scroll;
 }
 .branch > .textedit {

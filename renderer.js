@@ -15,8 +15,6 @@ document.addEventListener('readystatechange', () => {
     addEventListener('keydown', (event) => {
       if (event.key === 'Enter' && !event.shiftKey)
         event.preventDefault();
-      if (event.altKey)
-        event.preventDefault();
     });
     addEventListener('keyup', (event) => {
       if (event.key === 'Enter' && !event.shiftKey)
@@ -50,6 +48,8 @@ async function drawBranch(x, y, branch, branchPath) {
   btns.appendChild(editBtn);
 
   async function editEvt() {
+    if (editing)
+      return;
     editing = true;
 
     branchElem.setAttribute('class', 'branch statusedit');
@@ -121,6 +121,8 @@ async function drawBranch(x, y, branch, branchPath) {
   btns.appendChild(deleteBtn);
 
   async function deleteEvt() {
+    if (editing)
+      return;
     branchElem.setAttribute('class', 'branch statusdelete');
     content.setAttribute('class', 'content prompt');
     content.innerHTML = 'Are you sure?';
@@ -189,6 +191,8 @@ async function drawBranch(x, y, branch, branchPath) {
   btns.appendChild(addBtn);
 
   async function addEvt() {
+    if (editing)
+      return;
     branch.children.push({
       'value': 'Notes...',
       'children': []
@@ -223,7 +227,7 @@ async function drawBranch(x, y, branch, branchPath) {
 }
 
 async function drawTree(treePath, tree) {
-  const WIDTH = main.clientWidth;
+  const WIDTH = document.body.clientWidth;
   const HEIGHT = main.clientHeight;
 
   main.innerHTML = '';
@@ -234,13 +238,16 @@ async function drawTree(treePath, tree) {
   drawBranch(WIDTH / 2, HEIGHT / 2, currentBranch, treePath);
 
   const n = currentBranch.children.length;
-  const r1 = WIDTH / 3;
-  const r2 = HEIGHT / 3;
+  const r = 0.35;
+  const r1 = WIDTH * r;
+  const r2 = HEIGHT * r;
 
   function a (i) {
     return () => {
-      treePath.push(i);
-      updateTreePath(treePath);
+      if (!editing) {
+        treePath.push(i);
+        updateTreePath(treePath);
+      }
     };
   }
   for (const i in currentBranch.children) {
@@ -357,8 +364,10 @@ async function saveAsFile() {
     alert(`Failed to save: ${err}`);
     return;
   }
-  filePath = path;
-  ElectronAPI.setTitle('Irminsul | ' + path);
+  if (status === 'success') {
+    filePath = path;
+    ElectronAPI.setTitle('Irminsul | ' + path);
+  }
 }
 document.querySelector('#save-as-file').addEventListener('click', saveAsFile);
 
